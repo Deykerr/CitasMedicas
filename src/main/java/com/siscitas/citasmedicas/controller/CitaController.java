@@ -19,7 +19,6 @@ import com.siscitas.citasmedicas.controller.dto.CitaRequest;
 import com.siscitas.citasmedicas.controller.dto.CitaResponse;
 import com.siscitas.citasmedicas.service.CitaService;
 
-// Opcional: import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/citas")
@@ -39,32 +38,23 @@ public class CitaController {
     }
 
     @PostMapping
-    public ResponseEntity<CitaResponse> programarCita(/*@Valid*/ @RequestBody CitaRequest request) {
-        // Aquí el servicio ya retorna CitaResponse, lo que es ideal para POST
+    public ResponseEntity<CitaResponse> programarCita( @RequestBody CitaRequest request) {
+       
         CitaResponse newCita = citaService.programarCita(request);
 
-        // Construir la URI del recurso creado para el encabezado Location (HTTP 201 Created)
-        // Esto es una buena práctica RESTful
-        // URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-        //         .path("/{id}")
-        //         .buildAndExpand(newCita.getIdCita()) // Asumiendo que getIdCita() existe en CitaResponse
-        //         .toUri();
-        // return ResponseEntity.created(location).body(newCita); // HTTP 201 Created con el cuerpo
-
-        // Si prefieres una respuesta más simple por ahora sin Location header:
-        return ResponseEntity.status(HttpStatus.CREATED).body(newCita); // HTTP 201 Created con el cuerpo
+        return ResponseEntity.status(HttpStatus.CREATED).body(newCita); 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CitaResponse> updateCita(@PathVariable Long id, /*@Valid*/ @RequestBody CitaRequest request) {
-        // Aquí el servicio ya retorna CitaResponse, lo que es ideal para PUT
+    public ResponseEntity<CitaResponse> updateCita(@PathVariable Long id,  @RequestBody CitaRequest request) {
+   
         CitaResponse updatedCita = citaService.updateCita(id, request);
-        return ResponseEntity.ok(updatedCita); // HTTP 200 OK con el cuerpo actualizado
+        return ResponseEntity.ok(updatedCita); 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCita(@PathVariable Long id) {
         citaService.deleteCita(id);
-        return ResponseEntity.noContent().build(); // HTTP 204 No Content
+        return ResponseEntity.noContent().build();
     }
 }

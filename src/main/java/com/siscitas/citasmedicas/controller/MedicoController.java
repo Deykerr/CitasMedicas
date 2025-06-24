@@ -22,7 +22,7 @@ import com.siscitas.citasmedicas.controller.dto.MedicoRequest;
 import com.siscitas.citasmedicas.controller.dto.MedicoResponse;
 import com.siscitas.citasmedicas.service.MedicoService;
 
-// Opcional: import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/medicos")
@@ -38,12 +38,10 @@ public class MedicoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MedicoResponse> getMedicoById(@PathVariable Long id) {
-        // El servicio ya lanza una excepción si no lo encuentra,
-        // el ControllerAdvice (si lo implementas) lo manejará y devolverá 404.
+     
         return ResponseEntity.ok(medicoService.findByIdMedico(id));
     }
 
-    // Endpoint para buscar por DNI o nombre
     @GetMapping("/search")
     public ResponseEntity<?> searchMedicos(
             @RequestParam(required = false) Integer dni,
@@ -51,7 +49,7 @@ public class MedicoController {
 
         if (dni != null) {
             Optional<MedicoResponse> medico = medicoService.findByDni(dni);
-            // Si el servicio devuelve Optional y lo manejas aquí
+        
             return medico.map(ResponseEntity::ok)
                          .orElseGet(() -> ResponseEntity.notFound().build());
         } else if (nombre != null) {
@@ -64,34 +62,22 @@ public class MedicoController {
 
 
     @PostMapping
-    public ResponseEntity<Void> createMedico(/*@Valid*/ @RequestBody MedicoRequest request) {
-        medicoService.saveMedico(request); // Tu servicio es void por ahora
-        // Si medicoService.saveMedico retornara MedicoResponse, haríamos esto:
-        // MedicoResponse newMedico = medicoService.saveMedico(request);
-        // URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-        //         .path("/{id}")
-        //         .buildAndExpand(newMedico.getId())
-        //         .toUri();
-        // return ResponseEntity.created(location).build(); // HTTP 201 Created
+    public ResponseEntity<Void> createMedico(@RequestBody MedicoRequest request) {
+        medicoService.saveMedico(request); 
 
-        // Por ahora, como es void:
-        return ResponseEntity.status(HttpStatus.CREATED).build(); // O HttpStatus.OK
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateMedico(@PathVariable Long id, /*@Valid*/ @RequestBody MedicoRequest request) {
-        medicoService.updateMedico(id, request); // Tu servicio es void por ahora
-        // Si medicoService.updateMedico retornara MedicoResponse, haríamos esto:
-        // MedicoResponse updatedMedico = medicoService.updateMedico(id, request);
-        // return ResponseEntity.ok(updatedMedico); // HTTP 200 OK
-
-        // Por ahora, como es void:
-        return ResponseEntity.ok().build(); // HTTP 200 OK
+    public ResponseEntity<Void> updateMedico(@PathVariable Long id, @RequestBody MedicoRequest request) {
+        medicoService.updateMedico(id, request);
+    
+        return ResponseEntity.ok().build(); 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMedico(@PathVariable Long id) {
         medicoService.deleteMedico(id);
-        return ResponseEntity.noContent().build(); // HTTP 204 No Content
+        return ResponseEntity.noContent().build(); 
     }
 }
